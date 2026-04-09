@@ -1,6 +1,7 @@
 import os 
 import pandas as pd
 import librosa
+import numpy as np
 
 def create_dataset_csv(dataset_path):
     data = []
@@ -28,4 +29,12 @@ def audio_to_mel_spectrogram(file_path, n_mels=128, fmax=8000, sr = 44100):
     S_dB = librosa.power_to_db(S, ref=np.max)  # Convert to decibel scale
     
     return S_dB
+
+def convert_audio_to_mel_spectrogram(dataset_path):
+    data_mel_spectrogram = []
+    for file_path in dataset_path:
+        mel_spectrogram = audio_to_mel_spectrogram(file_path)
+        data_mel_spectrogram.append(mel_spectrogram)
+    
+    return data_mel_spectrogram
 
