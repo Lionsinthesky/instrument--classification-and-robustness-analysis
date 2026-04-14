@@ -27,9 +27,9 @@ def audio_to_mel_spectrogram(file_path, n_mels=128, fmax=8000, sr = 44100):
     y, sr = librosa.load(file_path, sr=sr)  # Load audio file
     #S = librosa.feature.melspectrogram(y=y, sr=sr, n_mels=n_mels, fmax=fmax)  # Compute Mel spectrogram
     S = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=n_mels, fmax=fmax)  # Compute MFCCs from the Mel spectrogram
-    S_dB = librosa.power_to_db(S, ref=np.max)  # Convert to decibel scale
+    #S_dB = librosa.power_to_db(S, ref=np.max)  # Convert to decibel scale
     
-    return S_dB
+    return S
 
 def convert_audio_to_mel_spectrogram(dataset_path):
     data_mel_spectrogram = []
