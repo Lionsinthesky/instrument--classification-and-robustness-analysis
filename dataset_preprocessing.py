@@ -26,7 +26,7 @@ def create_dataset_csv(dataset_path):
 def audio_to_mel_spectrogram(file_path, n_mels=128, fmax=8000, sr = 44100):
     y, sr = librosa.load(file_path, sr=sr)  # Load audio file
     #S = librosa.feature.melspectrogram(y=y, sr=sr, n_mels=n_mels, fmax=fmax)  # Compute Mel spectrogram
-    S = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=n_mels)  # Compute MFCCs from the Mel spectrogram
+    S = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=n_mels, fmax=fmax)  # Compute MFCCs from the Mel spectrogram
     S_dB = librosa.power_to_db(S, ref=np.max)  # Convert to decibel scale
     
     return S_dB
@@ -39,10 +39,9 @@ def convert_audio_to_mel_spectrogram(dataset_path):
     
     return data_mel_spectrogram
 
-def normalize_split_data(x_train, y_train, x_test, y_test, val_size=0.2):
+def normalize_split_data(x_train, y_train, val_size=0.2):
     #normalize the data
-    x_train = np.array(x_train)/255.0
-    x_test = np.array(x_test)/255.0
+    x_train = (x_train - np.mean(x_train, axis=0)) / np.std(x_train, axis=0)
 
     # Split data
     val_size_int = int(np.round(len(x_train))*val_size)
@@ -51,4 +50,4 @@ def normalize_split_data(x_train, y_train, x_test, y_test, val_size=0.2):
     x_train = x_train[:-val_size_int]
     y_train = y_train[:-val_size_int]
 
-    return x_train, y_train, x_val, y_val, x_test, y_test
+    return x_train, y_train, x_val, y_val
