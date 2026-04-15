@@ -19,9 +19,10 @@ def convolutional_model(input_shape):
     #x = keras.layers.Bidirectional(keras.layers.LSTM(32, return_sequences=True))(x)
     #x = keras.layers.Bidirectional(keras.layers.LSTM(16))(x)
 
-    x = keras.layers.Dropout(0.5)(x)
+    x = keras.layers.Dropout(0.25)(x)
     x = keras.layers.Flatten()(x)
     #x = keras.layers.GlobalAveragePooling2D()(x)
+    x = keras.layers.Dense(64, activation='relu')(x)                                                                                                                                                                                                                        
     x = keras.layers.Dense(5, activation='softmax')(x)
 
     conv_model = keras.Model(inputs=inputs, outputs=x)
