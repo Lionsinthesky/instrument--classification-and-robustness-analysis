@@ -1,7 +1,9 @@
-import os 
+import os
 import pandas as pd
 import librosa
 import numpy as np
+import soundfile as sf
+import torchaudio
 
 def create_dataset_csv(dataset_path):
     data = []
@@ -51,3 +53,26 @@ def normalize_split_data(x_train, y_train, val_size=0.2):
     y_train = y_train[:-val_size_int]
 
     return x_train, y_train, x_val, y_val
+
+def audio_trim(folder_path, output_folder, length = 3, sr = 44100):
+    for file_name in os.listdir(folder_path):
+        if file_name.endswith('.wav'):
+            file_path = os.path.join(folder_path, file_name)
+            y, sr = torchaudio.load(file_path)
+            #trim the audio to the specified length
+            y_trimmed = y[:length*sr]
+            #save the trimmed audio to the output folder
+            output_path = os.path.join(output_folder, file_name)
+            torchaudio.save(output_path, y_trimmed, sr)
+
+def audio_format_conversion(folder_path, target_sr = 44100):
+    for file_name in os.listdir(folder_path):
+        if not file_name.endswith('.wav'):
+            print(file_name)
+            file_path = os.path.join(folder_path, file_name)
+            print(file_path)
+            y, sr = librosa.load(file_path, sr=target_sr)
+            output_path = os.path.join(folder_path, file_name.split('.')[0] + '.wav')
+            print(output_path)
+            sf.write(output_path, y, sr)
+
