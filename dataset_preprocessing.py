@@ -27,10 +27,9 @@ def create_dataset_csv(dataset_path):
 
 def audio_to_mel_spectrogram(file_path, n_mels=128, fmax=8000, sr = 44100):
     y, sr = librosa.load(file_path, sr=sr)  # Load audio file
-    #S = librosa.feature.melspectrogram(y=y, sr=sr, n_mels=n_mels, fmax=fmax)  # Compute Mel spectrogram
+
     S = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=n_mels, fmax=fmax)  # Compute MFCCs from the Mel spectrogram
-    #S_dB = librosa.power_to_db(S, ref=np.max)  # Convert to decibel scale
-    
+
     return S
 
 def convert_audio_to_mel_spectrogram(dataset_path):
@@ -54,16 +53,19 @@ def normalize_split_data(x_train, y_train, val_size=0.2):
 
     return x_train, y_train, x_val, y_val
 
-def audio_trim(folder_path, output_folder, length = 3, sr = 44100):
+def audio_trim(folder_path, length = 3, sr = 44100):
     for file_name in os.listdir(folder_path):
         if file_name.endswith('.wav'):
+            print(file_name)
             file_path = os.path.join(folder_path, file_name)
-            y, sr = torchaudio.load(file_path)
+            print(file_path)
+            y, sr = librosa.load(file_path, sr=sr)
             #trim the audio to the specified length
             y_trimmed = y[:length*sr]
             #save the trimmed audio to the output folder
-            output_path = os.path.join(output_folder, file_name)
-            torchaudio.save(output_path, y_trimmed, sr)
+            output_path = os.path.join(folder_path, file_name)
+            sf.write(output_path, y_trimmed, sr)
+            print("Trimmed and saved: ", output_path)
 
 def audio_format_conversion(folder_path, target_sr = 44100):
     for file_name in os.listdir(folder_path):
