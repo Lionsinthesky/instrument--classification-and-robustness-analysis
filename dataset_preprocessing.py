@@ -3,7 +3,6 @@ import pandas as pd
 import librosa
 import numpy as np
 import soundfile as sf
-import torchaudio
 
 def create_dataset_csv(dataset_path):
     data = []
